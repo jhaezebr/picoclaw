@@ -37,20 +37,6 @@ func NormalizeProvider(provider string) string {
 	p := strings.ToLower(strings.TrimSpace(provider))
 
 	switch p {
-	case "z.ai", "z-ai":
-		return "zai"
-	case "opencode-zen":
-		return "opencode"
-	case "qwen":
-		return "qwen-portal"
-	case "kimi-code":
-		return "kimi-coding"
-	case "gpt":
-		return "openai"
-	case "claude":
-		return "anthropic"
-	case "glm":
-		return "zhipu"
 	case "google":
 		return "gemini"
 	}
