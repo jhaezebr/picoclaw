@@ -7,6 +7,12 @@ on:
         description: "Release tag"
         required: true
         type: string
+  workflow_dispatch: # Adds the manual "Run workflow" button
+    inputs:
+      tag:
+        description: "Tag to build (e.g. v1.0.0)"
+        required: true
+        type: string
 
 env:
   GHCR_REGISTRY: ghcr.io
