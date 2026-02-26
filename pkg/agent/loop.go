@@ -523,7 +523,7 @@ func (al *AgentLoop) runLLMIteration(
 						return agent.Provider.Chat(ctx, messages, providerToolDefs, model, map[string]any{
 							"max_tokens":       agent.MaxTokens,
 							"temperature":      agent.Temperature,
-							"prompt_cache_key": agent.ID,
+							// "prompt_cache_key": agent.ID,
 						})
 					},
 				)
@@ -540,7 +540,7 @@ func (al *AgentLoop) runLLMIteration(
 			return agent.Provider.Chat(ctx, messages, providerToolDefs, agent.Model, map[string]any{
 				"max_tokens":       agent.MaxTokens,
 				"temperature":      agent.Temperature,
-				"prompt_cache_key": agent.ID,
+				//"prompt_cache_key": agent.ID,
 			})
 		}
 
@@ -957,7 +957,7 @@ func (al *AgentLoop) summarizeSession(agent *AgentInstance, sessionKey string) {
 			map[string]any{
 				"max_tokens":       1024,
 				"temperature":      0.3,
-				"prompt_cache_key": agent.ID,
+				// "prompt_cache_key": agent.ID,
 			},
 		)
 		if err == nil {
@@ -1008,7 +1008,7 @@ func (al *AgentLoop) summarizeBatch(
 		map[string]any{
 			"max_tokens":       1024,
 			"temperature":      0.3,
-			"prompt_cache_key": agent.ID,
+			// "prompt_cache_key": agent.ID,
 		},
 	)
 	if err != nil {
