@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/sipeed/picoclaw/cmd/picoclaw/internal"
-	"github.com/sipeed/picoclaw/pkg/auth"
 )
 
 func statusCmd() {
@@ -81,20 +80,6 @@ func statusCmd() {
 			fmt.Printf("Ollama: ✓ %s\n", cfg.Providers.Ollama.APIBase)
 		} else {
 			fmt.Println("Ollama: not set")
-		}
-
-		store, _ := auth.LoadStore()
-		if store != nil && len(store.Credentials) > 0 {
-			fmt.Println("\nOAuth/Token Auth:")
-			for provider, cred := range store.Credentials {
-				status := "authenticated"
-				if cred.IsExpired() {
-					status = "expired"
-				} else if cred.NeedsRefresh() {
-					status = "needs refresh"
-				}
-				fmt.Printf("  %s (%s): %s\n", provider, cred.AuthMethod, status)
-			}
 		}
 	}
 }
