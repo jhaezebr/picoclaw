@@ -15,7 +15,6 @@
 				"golang.go",
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
-				"eamodio.gitlens",
 				"ms-azuretools.vscode-docker",
 				"streetsidesoftware.code-spell-checker"
 			],
