@@ -61,7 +61,7 @@ jobs:
             echo "FINAL_TAG=$INPUT_TAG" >> $GITHUB_ENV
             echo "Using input tag: $INPUT_TAG"
           fi
-          echo "ghcr_tag=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${INPUT_TAG}" >> "$GITHUB_OUTPUT"
+          echo "ghcr_tag=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${FINAL_TAG}" >> "$GITHUB_OUTPUT"
           echo "ghcr_latest=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
 
       # ── Build & Push ──────────────────────────
