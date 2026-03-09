@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install summarize via npm globally so the picoclaw user can execute it
-RUN npm install -g @steipete/summarize-core
+RUN npm install -g @steipete/summarize
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
