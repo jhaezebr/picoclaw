@@ -20,6 +20,7 @@ on:
 env:
   GHCR_REGISTRY: ghcr.io
   GHCR_IMAGE_NAME: ${{ github.repository_owner }}/picoclaw
+  FINAL_TAG: ${{ inputs.tag || 'main' }}
 
 jobs:
   build:
@@ -34,7 +35,7 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag || 'main' }}
+          ref: ${{ env.FINAL_TAG }}
 
       # ── Docker Buildx ─────────────────────────
       - name: 🔧 Set up Docker Buildx
