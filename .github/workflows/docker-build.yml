@@ -30,21 +30,6 @@ jobs:
       packages: write
 
     steps:
-      # ── Resolve Tag Logic ──────────────────────
-      - name: 🔍 Determine Target Tag
-        id: vars
-        shell: bash
-        run: |
-          # If inputs.tag is set (dispatch/call), use it. Otherwise, use 'main'.
-          INPUT_TAG="${{ inputs.tag }}"
-          if [ -z "$INPUT_TAG" ]; then
-            echo "FINAL_TAG=main" >> $GITHUB_ENV
-            echo "Using default tag: main"
-          else
-            echo "FINAL_TAG=$INPUT_TAG" >> $GITHUB_ENV
-            echo "Using input tag: $INPUT_TAG"
-          fi
-
       # ── Checkout ──────────────────────────────
       - name: 📥 Checkout repository
         uses: actions/checkout@v6
@@ -68,8 +53,15 @@ jobs:
         id: tags
         shell: bash
         run: |
-          tag="${{ inputs.tag }}"
-          echo "ghcr_tag=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${tag}" >> "$GITHUB_OUTPUT"
+          INPUT_TAG="${{ inputs.tag }}"
+          if [ -z "$INPUT_TAG" ]; then
+            echo "FINAL_TAG=main" >> $GITHUB_ENV
+            echo "Using default tag: main"
+          else
+            echo "FINAL_TAG=$INPUT_TAG" >> $GITHUB_ENV
+            echo "Using input tag: $INPUT_TAG"
+          fi
+          echo "ghcr_tag=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${INPUT_TAG}" >> "$GITHUB_OUTPUT"
           echo "ghcr_latest=${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
 
       # ── Build & Push ──────────────────────────
