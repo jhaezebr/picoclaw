@@ -1,0 +1,65 @@
+# ============================================================
+# Stage 1: Build the picoclaw binary
+# ============================================================
+FROM golang:1.25-bookworm AS builder
+
+# Ubuntu/Debian-based Go images use apt
+RUN apt-get update && apt-get install -y git make && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+
+# Cache dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source and build
+COPY . .
+RUN make build
+
+# ============================================================
+# Stage 2: Minimal runtime image (Ubuntu 24.04)
+# ============================================================
+FROM ubuntu:24.04
+
+# Prevent interactive prompts during apt install
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install basics, GitHub CLI, Node.js, and npm
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    tzdata \
+    curl \
+    wget \
+    git \
+    nodejs \
+    npm \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install summarize via npm globally so the picoclaw user can execute it
+RUN npm install -g @steipete/summarize-core
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -q --spider http://localhost:18790/health || exit 1
+
+# Copy binary from builder
+COPY --from=builder /src/build/picoclaw /usr/local/bin/picoclaw
+
+# Create non-root user and group
+RUN groupadd -g 1001 picoclaw && \
+    useradd -m -u 1001 -g picoclaw -s /bin/bash picoclaw
+
+# Switch to non-root user
+USER picoclaw
+WORKDIR /home/picoclaw
+
+# Run onboard to create initial directories and config
+RUN /usr/local/bin/picoclaw onboard
+
+ENTRYPOINT ["picoclaw"]
+CMD ["gateway"]
