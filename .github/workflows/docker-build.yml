@@ -34,7 +34,7 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag || github.sha }}
+          ref: ${{ inputs.tag || 'main' }}
 
       # ── Docker Buildx ─────────────────────────
       - name: 🔧 Set up Docker Buildx
