@@ -20,7 +20,6 @@ on:
 env:
   GHCR_REGISTRY: ghcr.io
   GHCR_IMAGE_NAME: ${{ github.repository_owner }}/picoclaw
-  FINAL_TAG: ${{ inputs.tag || 'main' }}
 
 jobs:
   build:
@@ -29,6 +28,22 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    steps:
+      # ── Resolve Tag Logic ──────────────────────
+      - name: 🔍 Determine Target Tag
+        id: vars
+        shell: bash
+        run: |
+          # If inputs.tag is set (dispatch/call), use it. Otherwise, use 'main'.
+          INPUT_TAG="${{ inputs.tag }}"
+          if [ -z "$INPUT_TAG" ]; then
+            echo "FINAL_TAG=main" >> $GITHUB_ENV
+            echo "Using default tag: main"
+          else
+            echo "FINAL_TAG=$INPUT_TAG" >> $GITHUB_ENV
+            echo "Using input tag: $INPUT_TAG"
+          fi
 
     steps:
       # ── Checkout ──────────────────────────────
