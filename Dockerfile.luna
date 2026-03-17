@@ -52,9 +52,11 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Copy binary from builder
 COPY --from=builder /src/build/picoclaw /usr/local/bin/picoclaw
 
+RUN userdel -r ubuntu
+
 # Create non-root user and group
-RUN groupadd -g 1001 picoclaw && \
-    useradd -m -u 1001 -g picoclaw -s /bin/bash picoclaw
+RUN groupadd -g 1000 picoclaw && \
+    useradd -m -u 1000 -g picoclaw -s /bin/bash picoclaw
 
 # Switch to non-root user
 USER picoclaw
